@@ -9,3 +9,5 @@ dependencies = ["llm"]
 [project.entry-points.llm]
 prochat = "llm_rename"
 
+[tool.pytest.ini_options]
+filterwarnings = ["ignore::DeprecationWarning:pydantic.*:"]
