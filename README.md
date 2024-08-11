@@ -11,4 +11,6 @@ Once you install the plugin, you can run `qmv --editor 'llm rename'` and it will
 
 # Installation
 
+After you installed `llm` itself (e.g., `pipx install llm`), use:
+
 `llm install llm-rename`

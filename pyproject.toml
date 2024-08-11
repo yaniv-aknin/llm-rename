@@ -1,13 +1,25 @@
 [project]
 name = "llm_rename"
-version = "0.1"
+version = "1.0.0"
 description = "An `llm` plugin to assist with renameutils qcp/qmv commands."
+readme = "README.md"
 authors = [{name = "Yaniv Aknin", email = "yaniv@aknin.name"}]
 license = {text = "MIT License"}
 dependencies = ["llm"]
+
+[project.urls]
+homepage = "https://github.com/yaniv-aknin/llm-rename"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
 
 [project.entry-points.llm]
 prochat = "llm_rename"
 
 [tool.pytest.ini_options]
 filterwarnings = ["ignore::DeprecationWarning:pydantic.*:"]
+
+[tool.setuptools]
+py-modules = ["llm_rename"]
