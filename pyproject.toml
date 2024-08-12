@@ -1,6 +1,6 @@
 [project]
 name = "llm_rename"
-version = "1.0.0"
+version = "1.0.1"
 description = "An `llm` plugin to assist with renameutils qcp/qmv commands."
 readme = "README.md"
 authors = [{name = "Yaniv Aknin", email = "yaniv@aknin.name"}]

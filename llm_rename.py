@@ -12,14 +12,21 @@ MARKER = os.environ.get("LLM_RENAME_MARKER", "\n==\n")
 DEFAULT_SYSTEM_PROMPT = "You are given a qcp/qmv execution plan. Please emit a revised plan, and nothing else, following the criteria below:\n  * cleanup excessive whitespace\n"
 
 
+def edit(plan_file: Path):
+    editor = os.environ.get("EDITOR", "vim")
+    try:
+        subprocess.run([editor, str(plan_file)], check=True)
+    except subprocess.CalledProcessError:
+        raise SystemExit("Error: editor returned non-zero exit code")
+
+
 def process_plan(
     plan_file: Path, system_prompt: str, call_llm: t.Callable[[str, str], str]
 ):
     with open(plan_file, "a") as handle:
         handle.write(MARKER)
         handle.write(system_prompt)
-    editor = os.environ.get("EDITOR", "vim")
-    subprocess.run([editor, str(plan_file)])
+    edit(plan_file)
     raw_content = plan_file.read_text()
     if raw_content.count(MARKER) != 1:
         raise SystemExit("Error: expected exactly one marker")
@@ -59,6 +66,13 @@ def register_commands(cli):
         type=(str, str),
         help="Parameters for template",
     )
+    @click.option(
+        "-E",
+        "--edit-after",
+        is_flag=True,
+        default=False,
+        help="Edit the plan again after LLM processing",
+    )
     @click.option("--key", help="API key to use")
     def rename(
         plan_file,
@@ -67,6 +81,7 @@ def register_commands(cli):
         system,
         template,
         param,
+        edit_after,
         key,
     ):
         "LLM based qcp/qmv execution plan editors"
@@ -119,3 +134,6 @@ def register_commands(cli):
             return model.prompt(user_prompt, system_prompt, **validated_options).text()
 
         process_plan(plan_file, system, call_llm)
+
+        if edit_after:
+            edit(plan_file)
